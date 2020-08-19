@@ -20,11 +20,11 @@ async function saveLogin(email, hash) {
     };
 
     // Saving in DDB
-    ddb.putItem(putParams, function(err, data) {
+    await ddb.putItem(putParams, function(err, data) {
         if (err) {
             console.log("Error saving in DDB: ", err);
         }
-    });
+    }).promise();
 
     // Querying from DDB
     try {
