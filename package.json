@@ -1,0 +1,31 @@
+{
+  "name": "box-server",
+  "version": "1.0.0",
+  "description": "Server for Box website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/lucasdelevy/box-server.git"
+  },
+  "keywords": [
+    "box",
+    "server",
+    "nodejs"
+  ],
+  "author": "Lucas de Levy Oliveira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucasdelevy/box-server/issues"
+  },
+  "homepage": "https://github.com/lucasdelevy/box-server#readme",
+  "dependencies": {
+    "apollo-server": "^2.16.1",
+    "apollo-server-express": "^2.16.1",
+    "aws-sdk": "^2.736.0",
+    "graphql": "^15.3.0"
+  }
+}
