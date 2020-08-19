@@ -23,8 +23,6 @@ async function saveLogin(email, hash) {
     ddb.putItem(putParams, function(err, data) {
         if (err) {
             console.log("Error saving in DDB: ", err);
-        } else {
-            console.log("Saving...")
         }
     });
 
@@ -41,7 +39,7 @@ async function saveLogin(email, hash) {
             return { couldSave: false }
         }
 
-        console.log("Done!");
+        console.log("Save successful!");
         return { couldSave: true }
     } catch(err) {
         console.log(err);
