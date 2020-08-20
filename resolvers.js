@@ -8,21 +8,9 @@ const numRounds = 10;
 
 const saveLogin = async (email, password) => {
 
-    bcrypt.genSalt(numRounds, (err, salt) => {
-        if (err) {
-            console.log("Error generating salt: ", err);
-            return;
-        }
+    const hash = await createHash(password);
 
-        bcrypt.hash(password, salt, async (err, hash) => {
-            if (err) {
-                console.log("Error generating hash: ", err);
-                return;
-            }
-    
-            saveInDDB(email, hash);
-        });
-    });
+    await saveInDDB(email, hash);
 
     // Querying from DDB
     const getParams = {
@@ -49,7 +37,7 @@ const saveLogin = async (email, password) => {
     } catch(err) {
         console.log(err);
     }
-}
+};
 
 const confirmLogin = async (email, password) => {
     const getParams = {
@@ -83,9 +71,11 @@ const confirmLogin = async (email, password) => {
     } catch(err) {
         console.log(err);
     }
-}
+};
 
 const saveInDDB = async (email, hash) => {
+    console.log("email", email);
+    console.log("hash", hash);
     const putParams = {
         TableName: "BoxLogin",
         Item: {
@@ -100,7 +90,21 @@ const saveInDDB = async (email, hash) => {
             console.log("Error saving in DDB: ", err);
         }
     }).promise();
-}
+};
+
+const createHash = async (password) => {
+    const salt = await bcrypt.genSaltSync(numRounds);
+    if (salt === undefined) {
+        console.log("Error generating salt...");
+    }
+
+    const hash = bcrypt.hashSync(password, salt);
+    if (hash === undefined) {
+        console.log("Error generating hash...");
+    }
+
+    return hash;
+};
 
 // Provide resolver functions for your schema fields
 const resolvers = {
