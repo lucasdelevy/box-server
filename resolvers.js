@@ -22,7 +22,7 @@ const saveLogin = async (email, password) => {
     
             saveInDDB(email, hash);
         });
-    })
+    });
 
     // Querying from DDB
     const getParams = {
@@ -35,7 +35,7 @@ const saveLogin = async (email, password) => {
     try {
         const result = await ddb.getItem(getParams, function(err, _) {
             if (err) {
-            console.log("Error querying from DDB: ", err);
+                console.log("Error querying from DDB: ", err);
             }
         }).promise();
 
@@ -66,6 +66,11 @@ const confirmLogin = async (email, password) => {
               console.log("Error querying from DDB: ", err);
             }
         }).promise();
+
+        if (result === undefined) {
+            console.log("Could not find user: undefined");
+            return { authenticated: false };
+        }
 
         const same = (await bcrypt.compare(password, result.Item.hash.S)).valueOf();
         if (same) {
