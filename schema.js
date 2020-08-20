@@ -11,11 +11,11 @@ const typeDefs = gql`
     }
 
     type Mutation {
-        saveLogin(email: String!, hash: String!): SaveLogin
+        saveLogin(email: String!, password: String!): SaveLogin
     }
 
     type Query {
-        confirmLogin(email: String!, hash: String!): ConfirmLogin
+        confirmLogin(email: String!, password: String!): ConfirmLogin
     }
 `;
 

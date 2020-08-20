@@ -26,6 +26,7 @@
     "apollo-server": "^2.16.1",
     "apollo-server-express": "^2.16.1",
     "aws-sdk": "^2.736.0",
+    "bcrypt": "^5.0.0",
     "graphql": "^15.3.0"
   }
 }
