@@ -1,16 +1,47 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
+const fs = require('fs');
+const https = require('https');
+const http = require('http');
 
-const typeDefs = require('./schema');
-const resolvers = require('./resolvers');
+const typeDefs = require('./graphql/schema');
+const resolvers = require('./graphql/resolvers');
 
-const PORT = 8080;
+const configurations = {
+  // Note: You may need sudo to run on port 443
+  production: { ssl: true, port: 443, hostname: 'https://34.220.169.34/' },
+  development: { ssl: false, port: 8080, hostname: 'localhost' }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
+const environment = process.env.NODE_ENV || 'production'
+const config = configurations[environment]
+
+console.log("environment", environment);
 
 const app = express();
+const apollo = new ApolloServer({ typeDefs, resolvers });
+apollo.applyMiddleware({ app });
 
-const server = new ApolloServer({ typeDefs, resolvers });
-server.applyMiddleware({ app });
+// Create the HTTPS or HTTP server, per configuration
+var server
+if (config.ssl) {
+  // Assumes certificates are in .ssl folder from package root
+  // Make sure the files are secured
+  server = https.createServer(
+    {
+      key: fs.readFileSync(`./ssl/${environment}/server.key`),
+      cert: fs.readFileSync(`./ssl/${environment}/server.crt`)
+    },
+    app
+  )
+} else {
+  server = http.createServer(app)
+}
 
-app.listen({ port: PORT }, () =>
-  console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)
+server.listen({ port: config.port }, () =>
+  console.log(`🚀 Server ready at http${config.ssl ? 's' : ''}://${config.hostname}:${config.port}/graphql`)
 )
