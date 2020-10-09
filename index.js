@@ -7,9 +7,10 @@ const http = require('http');
 const typeDefs = require('./graphql/schema');
 const resolvers = require('./graphql/resolvers');
 
+const port = process.env.PORT || 3000;
 const configurations = {
   // Note: You may need sudo to run on port 443
-  production: { ssl: true, port: 443, hostname: 'https://nice-box.herokuapp.com/' },
+  production: { ssl: true, port, hostname: 'https://nice-box.herokuapp.com/' },
   development: { ssl: false, port: 8080, hostname: 'localhost' }
 }
 
