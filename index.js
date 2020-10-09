@@ -33,8 +33,8 @@ if (config.ssl) {
   // Make sure the files are secured
   server = https.createServer(
     {
-      key: fs.readFileSync(`./ssl/${environment}/server.key`),
-      cert: fs.readFileSync(`./ssl/${environment}/server.crt`)
+      key: process.env.SERVER_KEY,
+      cert: process.env.SERVER_CRT
     },
     app
   )
