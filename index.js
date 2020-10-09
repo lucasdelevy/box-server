@@ -9,7 +9,7 @@ const resolvers = require('./graphql/resolvers');
 
 const configurations = {
   // Note: You may need sudo to run on port 443
-  production: { ssl: true, port: 443, hostname: 'https://34.220.169.34/' },
+  production: { ssl: true, port: 443, hostname: 'https://nice-box.herokuapp.com/' },
   development: { ssl: false, port: 8080, hostname: 'localhost' }
 }
 
@@ -27,7 +27,7 @@ const apollo = new ApolloServer({ typeDefs, resolvers });
 apollo.applyMiddleware({ app });
 
 // Create the HTTPS or HTTP server, per configuration
-var server
+let server
 if (config.ssl) {
   // Assumes certificates are in .ssl folder from package root
   // Make sure the files are secured
