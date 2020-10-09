@@ -9,8 +9,8 @@ const resolvers = require('./graphql/resolvers');
 
 const port = process.env.PORT || 3000;
 const configurations = {
-  // Note: You may need sudo to run on port 443
   production: { ssl: true, port, hostname: 'nice-box.herokuapp.com' },
+  staging: { ssl: false, port: 8080, hostname: 'nice-box.herokuapp.com' },
   development: { ssl: false, port: 8080, hostname: 'localhost' }
 }
 
