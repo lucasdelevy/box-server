@@ -1,12 +1,16 @@
 const AWS = require('aws-sdk');
-AWS.config.loadFromPath('./.aws-auth.json');
 
-const ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+const ddb = new AWS.DynamoDB({
+    accessKeyId: process.env.AWS_KEY,
+    secretAccessKey: process.env.AWS_SECRET,
+    apiVersion: '2012-08-10'
+});
 
 const bcrypt = require('bcrypt');
 const numRounds = 10;
 
-const saveLogin = async (email, password) => {
+const saveLogin = async (email, password) =>
+{
 
     const hash = await createHash(password);
 
@@ -16,12 +20,13 @@ const saveLogin = async (email, password) => {
     const getParams = {
         TableName: 'BoxLogin',
         Key: {
-          'email': {S: email}
+            'email': { S: email }
         }
     };
 
     try {
-        const result = await ddb.getItem(getParams, function(err, _) {
+        const result = await ddb.getItem(getParams, function (err, _)
+        {
             if (err) {
                 console.log("Error querying from DDB: ", err);
             }
@@ -34,24 +39,26 @@ const saveLogin = async (email, password) => {
 
         console.log("Save successful!");
         return { couldSave: true };
-    } catch(err) {
+    } catch (err) {
         console.log(err);
     }
 };
 
-const confirmLogin = async (email, password) => {
+const confirmLogin = async (email, password) =>
+{
     const getParams = {
         TableName: 'BoxLogin',
         Key: {
-          'email': {S: email}
+            'email': { S: email }
         }
     };
 
     // Querying from DDB
     try {
-        const result = await ddb.getItem(getParams, function(err, _) {
+        const result = await ddb.getItem(getParams, function (err, _)
+        {
             if (err) {
-              console.log("Error querying from DDB: ", err);
+                console.log("Error querying from DDB: ", err);
             }
         }).promise();
 
@@ -68,12 +75,13 @@ const confirmLogin = async (email, password) => {
             console.log("Password does not match...");
             return { authenticated: false };
         }
-    } catch(err) {
+    } catch (err) {
         console.log(err);
     }
 };
 
-const saveInDDB = async (email, hash) => {
+const saveInDDB = async (email, hash) =>
+{
     console.log("email", email);
     console.log("hash", hash);
     const putParams = {
@@ -81,18 +89,20 @@ const saveInDDB = async (email, hash) => {
         Item: {
             email: { S: email },
             hash: { S: hash }
-          }
+        }
     };
 
     // Saving in DDB
-    await ddb.putItem(putParams, function(err, _) {
+    await ddb.putItem(putParams, function (err, _)
+    {
         if (err) {
             console.log("Error saving in DDB: ", err);
         }
     }).promise();
 };
 
-const createHash = async (password) => {
+const createHash = async (password) =>
+{
     const salt = await bcrypt.genSaltSync(numRounds);
     if (salt === undefined) {
         console.log("Error generating salt...");
