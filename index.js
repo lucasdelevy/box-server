@@ -10,8 +10,8 @@ const resolvers = require('./graphql/resolvers');
 const port = process.env.PORT || 3000;
 const configurations = {
   production: { ssl: true, port, hostname: 'nice-box.herokuapp.com' },
-  staging: { ssl: false, port: 8080, hostname: 'nice-box.herokuapp.com' },
-  development: { ssl: false, port: 8080, hostname: 'localhost' }
+  staging: { ssl: false, port, hostname: 'nice-box.herokuapp.com' },
+  development: { ssl: false, port, hostname: 'localhost' }
 }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -21,8 +21,6 @@ if (process.env.NODE_ENV !== 'production') {
 const environment = process.env.NODE_ENV || 'production'
 const config = configurations[environment]
 
-console.log("environment", environment);
-
 const app = express();
 const apollo = new ApolloServer({ typeDefs, resolvers });
 apollo.applyMiddleware({ app });
@@ -30,8 +28,6 @@ apollo.applyMiddleware({ app });
 // Create the HTTPS or HTTP server, per configuration
 let server
 if (config.ssl) {
-  // Assumes certificates are in .ssl folder from package root
-  // Make sure the files are secured
   server = https.createServer(
     {
       key: process.env.SERVER_KEY,
