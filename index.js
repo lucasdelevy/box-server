@@ -1,6 +1,5 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
-const fs = require('fs');
 const https = require('https');
 const http = require('http');
 

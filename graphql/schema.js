@@ -4,10 +4,16 @@ const { gql } = require('apollo-server');
 const typeDefs = gql`
     type SaveLogin {
         couldSave: Boolean!
+        token: String
     }
 
     type ConfirmLogin {
-        authenticated: Boolean!
+        authenticated: Boolean!,
+        token: String
+    }
+
+    type ListFiles {
+        files: [String],
     }
 
     type Mutation {
@@ -15,7 +21,8 @@ const typeDefs = gql`
     }
 
     type Query {
-        confirmLogin(email: String!, password: String!): ConfirmLogin
+        confirmLogin(email: String!, password: String!): ConfirmLogin,
+        listFiles(email: String!, token: String!, path: String!): ListFiles
     }
 `;
 
