@@ -3,6 +3,7 @@ const AWS = require('aws-sdk');
 const ddb = new AWS.DynamoDB({
     accessKeyId: process.env.AWS_KEY,
     secretAccessKey: process.env.AWS_SECRET,
+    region: "us-west-2",
     apiVersion: '2012-08-10'
 });
 
