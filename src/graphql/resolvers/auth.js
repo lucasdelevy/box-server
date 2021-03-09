@@ -92,8 +92,8 @@ const confirmLogin = async (email, password) => {
       return { authenticated: false };
     }
 
-    const same = (await bcrypt.compare(password, result.Item.hash.S)).valueOf();
-    if (same) {
+    const isSame = (await bcrypt.compare(password, result.Item.hash.S)).valueOf();
+    if (isSame) {
       console.log("Password matches!");
       return { authenticated: true, token: generateToken(email) };
     } else {
