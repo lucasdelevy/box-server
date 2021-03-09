@@ -1,5 +1,5 @@
-const { saveLogin, confirmLogin } = require("./auth");
-const { listFiles } = require("./fs");
+const { saveLogin, confirmLogin } = require("./resolvers/auth");
+const { listFiles } = require("./resolvers/fs");
 
 // Provide resolver functions for your schema fields
 const resolvers = {
