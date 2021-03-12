@@ -12,6 +12,12 @@ const typeDefs = gql`
         token: String
     }
 
+    type GetUserData {
+        validToken: Boolean!
+        email: String
+        userId: String
+    }
+
     type ListFiles {
         files: [String],
     }
@@ -22,6 +28,7 @@ const typeDefs = gql`
 
     type Query {
         confirmLogin(email: String!, password: String!): ConfirmLogin,
+        getUserData(email: String!, token: String!): GetUserData,
         listFiles(email: String!, token: String!, path: String!): ListFiles
     }
 `;

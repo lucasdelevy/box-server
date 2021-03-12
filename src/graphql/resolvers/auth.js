@@ -1,36 +1,26 @@
 /** DECLARATIONS */
 
-const AWS = require("aws-sdk");
-
-const ddb = new AWS.DynamoDB({
-  accessKeyId: process.env.AWS_KEY,
-  secretAccessKey: process.env.AWS_SECRET,
-  region: "us-west-2",
-  apiVersion: "2012-08-10",
-});
 const bcrypt = require("bcrypt");
-
 const { generateHash, generateToken } = require("../../helpers/authHelper");
+const {
+  loadFromDDB,
+  saveInDDB,
+  generateGetParams,
+  generatePutParams,
+} = require("../../helpers/ddbHelper");
+
+const ddbTableName = "BoxUsers";
 
 /** AUX FUNCTIONS */
 
 const persistLoginInfo = async (email, hash) => {
-  const putParams = {
-    TableName: "BoxLogin",
-    Item: {
-      email: { S: email },
-      hash: { S: hash },
-    },
-  };
+  const putParams = generatePutParams(ddbTableName, {
+    email: { S: email },
+    hash: { S: hash },
+  });
 
   // Saving in DDB
-  await ddb
-    .putItem(putParams, function (err, _) {
-      if (err) {
-        console.log("Error saving in DDB: ", err);
-      }
-    })
-    .promise();
+  await saveInDDB(putParams);
 };
 
 /** RESOLVERS */
@@ -41,24 +31,15 @@ const saveLogin = async (email, password) => {
   await persistLoginInfo(email, hash);
 
   // Querying from DDB
-  const getParams = {
-    TableName: "BoxLogin",
-    Key: {
-      email: { S: email },
-    },
-  };
+  const getParams = generateGetParams(ddbTableName, {
+    email: { S: email },
+  });
 
   try {
-    const result = await ddb
-      .getItem(getParams, function (err, _) {
-        if (err) {
-          console.log("Error querying from DDB: ", err);
-        }
-      })
-      .promise();
+    const result = await loadFromDDB(getParams);
 
     if (result.Item === undefined) {
-      console.log("Could not load data: undefined");
+      console.log(`Could not load data: ${result}`);
       return { couldSave: false };
     }
 
@@ -70,29 +51,21 @@ const saveLogin = async (email, password) => {
 };
 
 const confirmLogin = async (email, password) => {
-  const getParams = {
-    TableName: "BoxLogin",
-    Key: {
-      email: { S: email },
-    },
-  };
+  const getParams = generateGetParams(ddbTableName, {
+    email: { S: email },
+  });
 
-  // Querying from DDB
   try {
-    const result = await ddb
-      .getItem(getParams, function (err, _) {
-        if (err) {
-          console.log("Error querying from DDB: ", err);
-        }
-      })
-      .promise();
+    const result = await loadFromDDB(getParams);
 
     if (result === undefined) {
       console.log("Could not find user: undefined");
       return { authenticated: false };
     }
 
-    const isSame = (await bcrypt.compare(password, result.Item.hash.S)).valueOf();
+    const isSame = (
+      await bcrypt.compare(password, result.Item.hash.S)
+    ).valueOf();
     if (isSame) {
       console.log("Password matches!");
       return { authenticated: true, token: generateToken(email) };
