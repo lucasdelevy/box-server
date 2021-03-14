@@ -1,5 +1,3 @@
-/** DECLARATIONS */
-
 const bcrypt = require("bcrypt");
 const { generateHash, generateToken } = require("../../helpers/authHelper");
 const {
@@ -8,15 +6,19 @@ const {
   generateGetParams,
   generatePutParams,
 } = require("../../helpers/ddbHelper");
+const { v4: uuidv4 } = require("uuid");
 
 const ddbTableName = "BoxUsers";
 
 /** AUX FUNCTIONS */
 
 const persistLoginInfo = async (email, hash) => {
+  const userId = uuidv4();
+
   const putParams = generatePutParams(ddbTableName, {
     email: { S: email },
     hash: { S: hash },
+    userId: { S: userId }
   });
 
   // Saving in DDB
