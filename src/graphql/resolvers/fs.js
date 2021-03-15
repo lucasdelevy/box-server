@@ -19,7 +19,7 @@ const listFiles = async (email, token, path) =>
     })
       .filter(e => e);
     const s3KeyListUnique = Array.from(new Set(s3KeyList));
-    return { files: [s3KeyListUnique] };
+    return { files: [...s3KeyListUnique] };
   } else {
     throw "Invalid email or token";
   }
