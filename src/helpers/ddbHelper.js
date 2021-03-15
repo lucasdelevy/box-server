@@ -6,23 +6,27 @@ const ddb = new AWS.DynamoDB({
   apiVersion: "2012-08-10",
 });
 
-const generatePutParams = (tableName, obj) => {
+const generatePutParams = (tableName, obj) =>
+{
   return {
     TableName: tableName,
     Item: obj,
   };
 };
 
-const generateGetParams = (tableName, obj) => {
+const generateGetParams = (tableName, obj) =>
+{
   return {
     TableName: tableName,
     Key: obj,
   };
 };
 
-const loadFromDDB = async (getParams) => {
+const loadFromDDB = async (getParams) =>
+{
   return await ddb
-    .getItem(getParams, function (err, _) {
+    .getItem(getParams, function (err, _)
+    {
       if (err) {
         console.log("Error querying from DDB: ", err);
       }
@@ -30,9 +34,11 @@ const loadFromDDB = async (getParams) => {
     .promise();
 };
 
-const saveInDDB = async (putParams) => {
+const saveInDDB = async (putParams) =>
+{
   return await ddb
-    .putItem(putParams, function (err, _) {
+    .putItem(putParams, function (err, _)
+    {
       if (err) {
         console.log("Error saving in DDB: ", err);
       }

@@ -3,8 +3,6 @@ const { generateGetParams, loadFromDDB } = require("../../helpers/ddbHelper");
 
 const ddbTableName = "BoxUsers";
 
-/** RESOLVERS */
-
 const getUserData = async (email, token) => {
   const validToken = confirmToken(email, token);
 
@@ -18,7 +16,6 @@ const getUserData = async (email, token) => {
 
   try {
     const result = await loadFromDDB(getParams);
-    console.log(result);
     return {
       validToken: true,
       email: result.Item.email.S,
